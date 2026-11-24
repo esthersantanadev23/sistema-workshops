@@ -5,11 +5,20 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import io.github.cdimascio.dotenv.Dotenv;
+
 public class MysqlSingleton {
 
-    private static final String URL = "jdbc:mysql://localhost:3306/sistema_workshops";
-    private static final String USER = "root";
-    private static final String PASSWORD = "";
+    private static final Dotenv dotenv = Dotenv.configure()
+            .ignoreIfMissing()
+            .load();
+
+    private static final String URL = dotenv.get("DB_URL",
+            "jdbc:mysql://localhost:3306/sistema_workshops");
+
+    private static final String USER = dotenv.get("DB_USER", "root");
+
+    private static final String PASSWORD = dotenv.get("DB_PASSWORD", "");
 
     private static MysqlSingleton instance;
     private Connection conexao;
@@ -35,15 +44,16 @@ public class MysqlSingleton {
         }
         return this.conexao;
     }
+
     public ResultSet executar(String sql, Object... parametros) throws SQLException {
-    var ps = obterConexao().prepareStatement(sql);
+        var ps = obterConexao().prepareStatement(sql);
 
-    for (int i = 0; i < parametros.length; i++) {
-        ps.setObject(i + 1, parametros[i]);
+        for (int i = 0; i < parametros.length; i++) {
+            ps.setObject(i + 1, parametros[i]);
+        }
+
+        return ps.executeQuery();
     }
-
-    return ps.executeQuery();
-}
 
     public int executarUpdate(String sql, Object... parametros) throws SQLException {
         var ps = obterConexao().prepareStatement(sql);
