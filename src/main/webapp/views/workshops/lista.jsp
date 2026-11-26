@@ -16,11 +16,65 @@
 
     <h1>Workshops</h1>
 
+        <div class="dashboard-cards">
+
+            <div class="dashboard-card">
+                <div class="card-icon">📚</div>
+                <div class="card-info">
+                    <h3>Total de Workshops</h3>
+                    <p id="totalWorkshops">${totalWorkshops}</p>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="card-icon">📅</div>
+                <div class="card-info">
+                    <h3>Próximos Workshops</h3>
+                    <p id="proximosWorkshops">${proximosWorkshops}</p>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="card-icon">👥</div>
+                <div class="card-info">
+                    <h3>Total de Vagas</h3>
+                    <p id="totalVagas">${totalVagas}</p>
+                </div>
+            </div>
+
+        </div>
+
+        <%
+            String status = request.getParameter("status");
+            String mensagem = null;
+            String tipo = "sucesso";
+
+            if ("cadastrado".equals(status)) {
+                mensagem = "Workshop cadastrado com sucesso!";
+            } else if ("atualizado".equals(status)) {
+                mensagem = "Workshop atualizado com sucesso!";
+            } else if ("erro".equals(status)) {
+                mensagem = "Não foi possível salvar o workshop. Verifique os dados e tente novamente.";
+                tipo = "erro";
+            }
+
+            if (mensagem != null) {
+        %>
+            <div class="alert alert-<%= tipo %>">
+                <%= mensagem %>
+            </div>
+        <%
+            }
+        %>
+
     <a class="btn btn-primary"
        href="${pageContext.request.contextPath}/workshops?acao=novo">
         Novo Workshop
     </a>
-
+    <div class="search-container">
+        <input type="text" id="buscaWorkshop"
+            placeholder="Buscar por título ou local...">
+    </div>
     <div class="table-container">
 
         <table>
@@ -97,6 +151,22 @@
     </div>
 
 </div>
+<script>
+    document.getElementById("buscaWorkshop").addEventListener("input", function () {
+        const busca = this.value.toLowerCase();
+        const linhas = document.querySelectorAll("tbody tr");
 
+        linhas.forEach(function (linha) {
+            const titulo = linha.cells[1].textContent.toLowerCase();
+            const local = linha.cells[5].textContent.toLowerCase();
+
+            if (titulo.includes(busca) || local.includes(busca)) {
+                linha.style.display = "";
+            } else {
+                linha.style.display = "none";
+            }
+        });
+    });
+</script>
 </body>
 </html>
