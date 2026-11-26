@@ -2,9 +2,9 @@
 
 ## Sobre o Projeto
 
-O Sistema de Agendamento de Workshops é uma aplicação desenvolvida em Java para realizar o gerenciamento de workshops, permitindo o cadastro, consulta, atualização e exclusão de informações.
+O Sistema de Agendamento de Workshops é uma aplicação desenvolvida em Java para o gerenciamento de workshops, permitindo o cadastro, consulta, atualização e exclusão de informações.
 
-O projeto foi desenvolvido utilizando o padrão MVC e evoluiu de uma aplicação web para uma API REST, permitindo que os dados sejam acessados por meio de requisições HTTP e retornados no formato JSON.
+O projeto utiliza o padrão arquitetural MVC (Model-View-Controller) e conta com uma interface web para gerenciamento dos workshops, além de uma API REST que permite acessar os dados por meio de requisições HTTP, utilizando o formato JSON.
 
 ## Tecnologias Utilizadas
 
@@ -12,7 +12,7 @@ O projeto foi desenvolvido utilizando o padrão MVC e evoluiu de uma aplicação
 - Maven
 - Jakarta Servlet
 - JSP
-- HTML e CSS
+- HTML5 e CSS3
 - MySQL
 - Apache Tomcat 10
 - Jackson (JSON)
@@ -20,10 +20,10 @@ O projeto foi desenvolvido utilizando o padrão MVC e evoluiu de uma aplicação
 
 ## Arquitetura
 
-O projeto utiliza o padrão MVC (Model-View-Controller), organizado em camadas para facilitar a manutenção e a separação das responsabilidades.
+O projeto utiliza o padrão MVC, organizado em camadas para facilitar a manutenção, a organização do código e a separação de responsabilidades.
 
 - **Model:** representa as entidades e os dados do sistema.
-- **View:** responsável pela interface visual utilizando JSP, HTML e CSS.
+- **View:** responsável pela interface visual, utilizando JSP, HTML e CSS.
 - **Controller:** recebe as requisições e direciona as operações.
 - **Service:** concentra as regras de negócio e validações.
 - **DAO:** responsável pelo acesso e manipulação dos dados no banco de dados.
@@ -36,6 +36,11 @@ O projeto utiliza o padrão MVC (Model-View-Controller), organizado em camadas p
 - Listar workshops.
 - Editar workshops.
 - Excluir workshops.
+- Buscar workshops por título ou local.
+- Visualizar dashboard com informações resumidas:
+  - Total de workshops cadastrados.
+  - Próximos workshops.
+  - Total de vagas disponíveis.
 
 ### API REST
 
@@ -49,7 +54,7 @@ O projeto utiliza o padrão MVC (Model-View-Controller), organizado em camadas p
 
 O projeto utiliza o MySQL com o banco de dados `sistema_workshops`.
 
-A configuração de conexão é realizada por meio de variáveis de ambiente:
+A conexão é configurada por meio de variáveis de ambiente:
 
 ```env
 DB_URL=jdbc:mysql://127.0.0.1:3306/sistema_workshops
@@ -57,17 +62,16 @@ DB_USER=workshops
 DB_PASSWORD=sua_senha
 ```
 
-
-##  Como Executar o Projeto
+## Como Executar o Projeto
 
 ### 1. Pré-requisitos
 
-- Java instalado
-- Maven
-- MySQL
-- Apache Tomcat 10
+- Java 21 instalado.
+- Maven instalado.
+- MySQL instalado e configurado.
+- Apache Tomcat 10.
 
-### 2. Configurar o banco de dados
+### 2. Configurar o Banco de Dados
 
 Crie o banco de dados MySQL:
 
@@ -77,7 +81,7 @@ CREATE DATABASE sistema_workshops;
 
 Configure as credenciais de acesso no arquivo `.env`, localizado na raiz do projeto.
 
-### 3. Compilar o projeto
+### 3. Compilar o Projeto
 
 Na raiz do projeto, execute:
 
@@ -85,7 +89,9 @@ Na raiz do projeto, execute:
 mvn clean package
 ```
 
-### 4. Deploy no Tomcat
+O Maven irá compilar o projeto e gerar o arquivo WAR na pasta `target`.
+
+### 4. Implantar no Tomcat
 
 Copie o arquivo WAR gerado para a pasta `webapps` do Tomcat:
 
@@ -95,23 +101,25 @@ cp target/sistema-workshops.war apache-tomcat-10.1.61/webapps/
 
 ### 5. Iniciar o Tomcat
 
+Execute:
+
 ```bash
 ./apache-tomcat-10.1.61/bin/startup.sh
 ```
 
 A aplicação estará disponível em:
 
-https://zany-rotary-phone-x5w5gw6wr69v26wwq-8080.app.github.dev/sistema-workshops/workshops
+[http://localhost:8080/sistema-workshops/workshops](http://localhost:8080/sistema-workshops/workshops)
 
 ## API REST — Endpoints
 
-Base URL:
+### URL Base
 
 ```text
 http://localhost:8080/sistema-workshops/api/workshops
 ```
 
-| Método | Endpoint | Descrição |
+| Método HTTP | Endpoint | Descrição |
 |---|---|---|
 | GET | `/api/workshops` | Listar todos os workshops |
 | GET | `/api/workshops/{id}` | Buscar workshop por ID |
@@ -121,19 +129,19 @@ http://localhost:8080/sistema-workshops/api/workshops
 
 ## Exemplos de Requisições
 
-### Listar workshops
+### Listar Workshops
 
 ```http
 GET /api/workshops
 ```
 
-### Buscar workshop por ID
+### Buscar Workshop por ID
 
 ```http
 GET /api/workshops/2
 ```
 
-### Cadastrar workshop
+### Cadastrar Workshop
 
 ```http
 POST /api/workshops
@@ -153,7 +161,7 @@ Corpo da requisição:
 }
 ```
 
-### Atualizar workshop
+### Atualizar Workshop
 
 ```http
 PUT /api/workshops/2
@@ -173,7 +181,7 @@ Corpo da requisição:
 }
 ```
 
-### Excluir workshop
+### Excluir Workshop
 
 ```http
 DELETE /api/workshops/2
@@ -183,17 +191,17 @@ DELETE /api/workshops/2
 
 Os endpoints foram testados utilizando comandos `curl` no terminal.
 
-| Operação | Resultado esperado | Resultado obtido |
-|---|---|---|
-| Listagem | 200 OK | 200 OK |
-| Cadastro | 201 Created | 201 |
-| Consulta por ID | 200 OK | 200 |
-| Atualização | 200 OK | 200 |
-| Exclusão | 204 No Content | 204 |
-| Listagem após exclusão | 200 OK | 200 — lista vazia |
+| Operação | Código HTTP | Resultado |
+|---|---:|---|
+| Listagem | 200 OK | Sucesso |
+| Cadastro | 201 Created | Sucesso |
+| Consulta por ID | 200 OK | Sucesso |
+| Atualização | 200 OK | Sucesso |
+| Exclusão | 204 No Content | Sucesso |
+| Listagem após exclusão | 200 OK | Sucesso |
 
-Todos os testes CRUD realizados apresentaram os códigos HTTP esperados.
+Os testes CRUD apresentaram os códigos HTTP esperados, validando o funcionamento das operações da API.
 
 ## Projeto Acadêmico
 
-Projeto desenvolvido para fins acadêmicos, com o objetivo de aplicar conceitos de desenvolvimento web, arquitetura MVC, APIs REST, integração com banco de dados e operações CRUD.
+Projeto desenvolvido para fins acadêmicos, com o objetivo de aplicar conceitos de desenvolvimento web, arquitetura MVC, APIs REST, integração com banco de dados, organização em camadas e operações CRUD.
